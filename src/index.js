@@ -26,7 +26,7 @@ class Paragraph {
    * @constructor
    */
   static get DEFAULT_PLACEHOLDER() {
-    return '';
+    return 'Insert Text';
   }
 
   /**
@@ -138,9 +138,21 @@ class Paragraph {
    * @public
    */
   save(toolsContent) {
-    return {
-      text: toolsContent.innerHTML
-    };
+     if (toolsContent.querySelector("span.inline-math") === null) {
+      return {
+        text: toolsContent.innerHTML
+      };
+    } else {
+      var clonedContent = $(toolsContent).clone()[0];
+      for (var el of clonedContent.querySelectorAll("span.inline-math")) {
+        el.querySelector('script').removeAttribute('id');
+        el.innerHTML = el.querySelector('script').outerHTML;                                 
+      }
+      
+      return {
+        text: clonedContent.innerHTML
+      };
+    }
   }
 
   /**
